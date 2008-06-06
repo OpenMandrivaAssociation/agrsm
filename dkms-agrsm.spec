@@ -12,6 +12,10 @@ Version: %{version}
 Release: %mkrel 1
 # http://service.one.de/download/index.php?&direction=0&order=&directory=NOTEBOOKS/ONE_A1xx/Linux%20Drivers/Source-code
 Source0: %{distname}.tar.gz
+Patch0: modem-update-device_interrupt-definition.patch
+Patch1: modem-update-for-serial-changes.patch
+Patch2: modem-update-irq-flags.patch
+Patch3: modem-update-hda-structs.patch
 License: Commercial
 Group: System/Kernel and hardware
 URL: http://www.lsi.com/
@@ -32,6 +36,10 @@ This package contains the %{module} driver for %{card}.
 
 %prep
 %setup -q -n %{distname}
+%patch0 -p1 -b .device-interrupt
+%patch1 -p1 -b .for-serial-changes
+%patch2 -p1 -b .irq-flags
+%patch3 -p1 -b .hda-structs
 
 %install
 rm -rf %{buildroot}
