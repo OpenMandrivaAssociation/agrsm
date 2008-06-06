@@ -53,7 +53,9 @@ cat > %{buildroot}/usr/src/%{module}-%{version}-%{release}/dkms.conf <<EOF
 PACKAGE_NAME=%{module}
 PACKAGE_VERSION=%{version}-%{release}
 DEST_MODULE_LOCATION[0]=/kernel/drivers/char
-BUILT_MODULE_NAME[0]=%{module}
+DEST_MODULE_LOCATION[1]=/kernel/drivers/char
+BUILT_MODULE_NAME[0]=agrmodem
+BUILT_MODULE_NAME[1]=agrserial
 CLEAN="make clean"
 AUTOINSTALL="yes"
 EOF
