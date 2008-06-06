@@ -23,7 +23,6 @@ License: Commercial
 Group: System/Kernel and hardware
 URL: http://www.lsi.com/
 BuildRoot: %{_tmppath}/%{name}-buildroot
-BuildArch: noarch
 
 %description
 This package contains the %{module} driver for %{card}.
