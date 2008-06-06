@@ -54,6 +54,7 @@ PACKAGE_NAME=%{module}
 PACKAGE_VERSION=%{version}-%{release}
 DEST_MODULE_LOCATION[0]=/kernel/drivers/char
 BUILT_MODULE_NAME[0]=%{module}
+CLEAN="make clean"
 AUTOINSTALL="yes"
 EOF
 
