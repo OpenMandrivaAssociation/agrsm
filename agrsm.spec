@@ -44,6 +44,7 @@ cp %{SOURCE1} .
 %patch0 -p1 -b .device-interrupt
 %patch1 -p1 -b .for-serial-changes
 %patch2 -p1 -b .irq-flags
+%patch3 -p1 -b .hda-structs
 %patch4 -p1 -b .warnings
 %patch5 -p1 -b .drvname
 %patch6 -p1 -b .modprobe
