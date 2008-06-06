@@ -12,6 +12,7 @@ Version: %{version}
 Release: %mkrel 1
 # http://service.one.de/download/index.php?&direction=0&order=&directory=NOTEBOOKS/ONE_A1xx/Linux%20Drivers/Source-code
 Source0: %{distname}.tar.gz
+Source1: /usr/src/linux-2.6.24.5-1mnb/sound/pci/hda/hda_codec.h
 Patch0: modem-update-device_interrupt-definition.patch
 Patch1: modem-update-for-serial-changes.patch
 Patch2: modem-update-irq-flags.patch
@@ -38,10 +39,10 @@ This package contains the %{module} driver for %{card}.
 
 %prep
 %setup -q -n %{distname}
+cp %{SOURCE1} .
 %patch0 -p1 -b .device-interrupt
 %patch1 -p1 -b .for-serial-changes
 %patch2 -p1 -b .irq-flags
-%patch3 -p1 -b .hda-structs
 %patch4 -p1 -b .warnings
 %patch5 -p1 -b .drvname
 
