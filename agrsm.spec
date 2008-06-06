@@ -20,6 +20,8 @@ Patch3: modem-update-hda-structs.patch
 Patch4: modem-fix-ptr-warnings.patch
 Patch5: modem-drvname.patch
 Patch6: agrsm-2.1.80-ONE_A1XX-20080527-modprobe.patch
+Patch7: agrsm-2.1.80-ONE_A1XX-20080527-hda_codec.patch
+Patch8: agrsm-2.1.80-ONE_A1XX-20080527-LSB.patch
 License: Commercial
 Group: System/Kernel and hardware
 URL: http://www.lsi.com/
@@ -48,6 +50,8 @@ cp %{SOURCE1} .
 %patch4 -p1 -b .warnings
 %patch5 -p1 -b .drvname
 %patch6 -p1 -b .modprobe
+%patch7 -p1 -b .hda_codec
+%patch8 -p1 -b .LSB
 
 %install
 rm -rf %{buildroot}
