@@ -62,8 +62,25 @@ EOF
 
 tar c . | tar x -C %{buildroot}/usr/src/%{module}-%{version}-%{release}/
 
+install -d %{buildroot}%{_initrddir}
+install -m755 agr_softmodem %{buildroot}%{_initrddir}
+install -d %{buildroot}%{_prefix}/lib/AgereSoftModem
+install -m755 AgereMdmDaemon %{buildroot}%{_prefix}/lib/AgereSoftModem
+
 %clean
 rm -rf %{buildroot}
+
+%post
+%_post_service agr_softmodem
+
+%preun
+%_preun_service agr_softmodem
+
+%files
+%defattr(-,root,root)
+%{_initrddir}/agr_softmodem
+%dir %{_prefix}/lib/AgereSoftModem
+%{_prefix}/lib/AgereSoftModem/AgereMdmDaemon
 
 %files -n dkms-%{module}
 %defattr(0644,root,root,0755)
