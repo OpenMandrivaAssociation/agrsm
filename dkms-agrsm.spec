@@ -19,6 +19,7 @@ Patch2: modem-update-irq-flags.patch
 Patch3: modem-update-hda-structs.patch
 Patch4: modem-fix-ptr-warnings.patch
 Patch5: modem-drvname.patch
+Patch6: agrsm-2.1.80-ONE_A1XX-20080527-modprobe.patch
 License: Commercial
 Group: System/Kernel and hardware
 URL: http://www.lsi.com/
@@ -44,6 +45,7 @@ cp %{SOURCE1} .
 %patch2 -p1 -b .irq-flags
 %patch4 -p1 -b .warnings
 %patch5 -p1 -b .drvname
+%patch6 -p1 -b .modprobe
 
 %install
 rm -rf %{buildroot}
