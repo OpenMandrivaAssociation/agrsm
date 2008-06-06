@@ -17,6 +17,7 @@ Patch1: modem-update-for-serial-changes.patch
 Patch2: modem-update-irq-flags.patch
 Patch3: modem-update-hda-structs.patch
 Patch4: modem-fix-ptr-warnings.patch
+Patch5: modem-drvname.patch
 License: Commercial
 Group: System/Kernel and hardware
 URL: http://www.lsi.com/
@@ -42,6 +43,7 @@ This package contains the %{module} driver for %{card}.
 %patch2 -p1 -b .irq-flags
 %patch3 -p1 -b .hda-structs
 %patch4 -p1 -b .warnings
+%patch5 -p1 -b .drvname
 
 %install
 rm -rf %{buildroot}
