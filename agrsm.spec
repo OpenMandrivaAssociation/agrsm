@@ -9,7 +9,7 @@
 Summary: %{module} driver
 Name: %{module}
 Version: %{version}
-Release: %mkrel 2
+Release: %mkrel 3
 # http://service.one.de/download/index.php?&direction=0&order=&directory=NOTEBOOKS/ONE_A1xx/Linux%20Drivers/Source-code
 Source0: %{distname}.tar.gz
 Source1: /usr/src/linux-2.6.24.5-1mnb/sound/pci/hda/hda_codec.h
