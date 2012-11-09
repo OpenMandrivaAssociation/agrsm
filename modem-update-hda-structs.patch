@@ -1,0 +1,81 @@
+--- Modem/HDA.c.orig	2008-03-01 17:56:42.000000000 -0300
++++ Modem/HDA.c	2008-03-01 21:52:53.000000000 -0300
+@@ -27,30 +27,30 @@
+ 
+ #define fnatr __attribute__((regparm(0)))
+ 
+-#define AZX_MAX_AUDIO_PCMS	6
+-#define AZX_MAX_MODEM_PCMS	2
+-#define AZX_MAX_PCMS		(AZX_MAX_AUDIO_PCMS + AZX_MAX_MODEM_PCMS)
++#define AZX_MAX_PCMS 8
+ 
+ //#define HDAdbg 
+ struct azx_dev {
+-	u32 *bdl;			/* virtual address of the BDL */
+-	dma_addr_t bdl_addr;		/* physical address of the BDL */
+-	u32 *posbuf;			/* position buffer pointer */
+-
+-	unsigned int bufsize;		/* size of the play buffer in bytes */
+-	unsigned int fragsize;		/* size of each period in bytes */
+-	unsigned int frags;		/* number for period in the play buffer */
+-	unsigned int fifo_size;		/* FIFO size */
++	struct snd_dma_buffer bdl; /* BDL buffer */
++	u32 *posbuf;            /* position buffer pointer */
+ 
+-	void __iomem *sd_addr;		/* stream descriptor pointer */
++	unsigned int bufsize;   /* size of the play buffer in bytes */
++	unsigned int frags;     /* number for period in the play buffer */
++	unsigned int fifo_size; /* FIFO size */
+ 
+-	u32 sd_int_sta_mask;		/* stream int status mask */
++	void __iomem *sd_addr;  /* stream descriptor pointer */
++
++	u32 sd_int_sta_mask;    /* stream int status mask */
+ 
+ 	/* pcm support */
+-	struct snd_pcm_substream *substream;	/* assigned substream, set in PCM open */
+-	unsigned int format_val;	/* format value to be set in the controller and the codec */
+-	unsigned char stream_tag;	/* assigned stream */
+-	unsigned char index;		/* stream index */
++	struct snd_pcm_substream *substream;    /* assigned substream,
++						 * set in PCM open
++						 */
++	unsigned int format_val;        /* format value to be set in the
++					 * controller and the codec
++					 */
++	unsigned char stream_tag;       /* assigned stream */
++	unsigned char index;            /* stream index */
+ 	/* for sanity check of position buffer */
+ 	unsigned int period_intr;
+ 
+@@ -95,7 +95,6 @@ struct azx {
+ 	struct azx_dev *azx_dev;
+ 
+ 	/* PCM */
+-	unsigned int pcm_devs;
+ 	struct snd_pcm *pcm[AZX_MAX_PCMS];
+ 
+ 	/* HD codec */
+@@ -106,17 +105,20 @@ struct azx {
+ 	struct azx_rb corb;
+ 	struct azx_rb rirb;
+ 
+-	/* BDL, CORB/RIRB and position buffers */
+-	struct snd_dma_buffer bdl;
++	/* CORB/RIRB and position buffers */
+ 	struct snd_dma_buffer rb;
+ 	struct snd_dma_buffer posbuf;
+ 
+ 	/* flags */
+ 	int position_fix;
++	unsigned int running :1;
+ 	unsigned int initialized :1;
+ 	unsigned int single_cmd :1;
+ 	unsigned int polling_mode :1;
+ 	unsigned int msi :1;
++
++	/* for debugging */
++	unsigned int last_cmd;  /* last issued command (to sync) */
+ };
+ 
+ extern void snd_hda_get_codec_name(struct hda_codec *, char *, int);

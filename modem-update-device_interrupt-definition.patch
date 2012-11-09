@@ -1,0 +1,12 @@
+diff -p -up Modem/agrmodem.h.orig Modem/agrmodem.h
+--- Modem/agrmodem.h.orig	2008-02-29 13:28:56.000000000 -0300
++++ Modem/agrmodem.h	2008-02-29 13:40:48.000000000 -0300
+@@ -73,7 +73,7 @@ word wrap_V16550_Read_RBR_buffer(byte *d
+ /******************* Functions passed on to Kernel *****************/  
+ void wrap_timertick_function ( unsigned long Instance ) { timertick_function (Instance);}
+ void wrap_LXHardwareBottomHalf (void *hardware){LXHardwareBottomHalf(hardware);}
+-irqreturn_t wrap_LX_isr_handler (int irq, void *_isr, struct pt_regs *regs){LX_isr_handler (irq, _isr, regs); return IRQ_HANDLED;}
++irqreturn_t wrap_LX_isr_handler (int irq, void *_isr){LX_isr_handler (irq, _isr, NULL); return IRQ_HANDLED;}
+ 
+ /************************ Memory allocation ************************/
+ void *x_vmalloc (unsigned int size) fnatr;

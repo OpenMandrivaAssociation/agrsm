@@ -1,0 +1,22 @@
+--- Modem/agrsoftmodem.c.orig	2008-03-03 11:19:25.000000000 -0300
++++ Modem/agrsoftmodem.c	2008-03-03 11:19:51.000000000 -0300
+@@ -110,7 +110,7 @@ const SUPPORTED_DEVICES agereSupDevices[
+ #endif
+ 
+ static char *modem_name = "Agere Modem Controller driver";
+-static char *modem_version = "2.1.80-Red Flag NE 5.0";
++static char *modem_version = "2.1.80";
+ static char *modem_revdate = "2007-10-1";
+ struct timer_list timerList;
+ int (*agr_rs_interrupt)(void) = NULL;
+--- Modem/serial26.c.orig	2008-03-03 11:19:31.000000000 -0300
++++ Modem/serial26.c	2008-03-03 11:20:05.000000000 -0300
+@@ -65,7 +65,7 @@
+ #endif
+ 
+ #ifdef LUCENT_MODEM
+-static char *serialif_version = "2.1.80.0Red Flag 5.0 NE";
++static char *serialif_version = "2.1.80.0";
+ static char *serialif_revdate = "2007-10-01";
+ static char *serialif_name = "Agere Modem Interface driver";
+ #endif

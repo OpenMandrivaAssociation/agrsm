@@ -1,0 +1,39 @@
+diff -p -up Modem/HDA.c.orig Modem/HDA.c
+--- Modem/HDA.c.orig	2008-02-29 14:23:32.000000000 -0300
++++ Modem/HDA.c	2008-02-29 14:36:34.000000000 -0300
+@@ -126,8 +126,8 @@ extern unsigned int snd_hda_codec_read(s
+ extern  int HDA_resume(void);
+ extern  int HDA_suspend(void);
+ 
+-int *ResumePt;
+-int *SuspendPt;
++void *ResumePt;
++void *SuspendPt;
+ struct hda_codec *AgrHDACodec;
+ 
+ /* assign a stream for the PCM */
+@@ -209,7 +209,7 @@ unsigned long * GetHDABaseAddress()
+ struct azx *chip_temp;
+ struct hda_bus *bus_temp;
+ struct hda_codec *codec_temp;
+-unsigned long temp;
++unsigned long *temp;
+ 
+ chip_temp = snd_cards[0]->private_data;
+ bus_temp = chip_temp->bus;
+@@ -274,13 +274,13 @@ void fnatr azlGetResourceInformation(uns
+ codecAddress[0] =  findHDACodec();
+ }
+ 
+-int fnatr setResumeCallBack(int *ResumeCallBack)
++int fnatr setResumeCallBack(void *ResumeCallBack)
+ {
+ ResumePt = AgrHDACodec->patch_ops.resume;
+ AgrHDACodec->patch_ops.resume=ResumeCallBack;
+ return(1);
+ }
+-int fnatr setSuspendCallBack(int *SuspendCallBack)
++int fnatr setSuspendCallBack(void *SuspendCallBack)
+ {
+ SuspendPt = AgrHDACodec->patch_ops.suspend;
+ AgrHDACodec->patch_ops.suspend=SuspendCallBack;

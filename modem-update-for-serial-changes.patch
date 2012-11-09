@@ -1,0 +1,106 @@
+--- Modem/serial26.c.orig	2008-02-29 17:20:12.000000000 -0300
++++ Modem/serial26.c	2008-02-29 18:33:15.000000000 -0300
+@@ -290,7 +290,7 @@ struct ltmodem_res
+ 
+ struct ltmodem_ops lt_modem_ops;
+ struct ltmodem_res lt_modem_res;
+-static void agr_rs_interrupt (void);
++static void agr_rs_interrupt (unsigned long dummy);
+ static int intf_flag = 0;
+ static int uart_flag = 0;
+ static int tx_empty_flag = 0;
+@@ -929,21 +929,27 @@ static void autoconfig_irq(struct uart_8
+ 	up->port.irq = (irq > 0) ? irq : 0;
+ }
+ 
+-static void serial8250_stop_tx(struct uart_port *port, unsigned int tty_stop)
++static inline void __stop_tx(struct uart_8250_port *p)
++{
++	if (p->ier & UART_IER_THRI) {
++		p->ier &= ~UART_IER_THRI;
++		serial_out(p, UART_IER, p->ier);
++	}
++}
++
++static void serial8250_stop_tx(struct uart_port *port)
+ {
+ 	struct uart_8250_port *up = (struct uart_8250_port *)port;
+ 
+-	if (up->ier & UART_IER_THRI) {
+-		up->ier &= ~UART_IER_THRI;
+-		serial_out(up, UART_IER, up->ier);
+-	}
+-	if (up->port.type == PORT_16C950 && tty_stop) {
++	__stop_tx(up);
++
++	if (up->port.type == PORT_16C950) {
+ 		up->acr |= UART_ACR_TXDIS;
+ 		serial_icr_write(up, UART_ACR, up->acr);
+ 	}
+ }
+ 
+-static void serial8250_start_tx(struct uart_port *port, unsigned int tty_start)
++static void serial8250_start_tx(struct uart_port *port)
+ {
+ 	struct uart_8250_port *up = (struct uart_8250_port *)port;
+ 
+@@ -954,7 +960,7 @@ static void serial8250_start_tx(struct u
+ 	/*
+ 	 * We only do this from uart_start
+ 	 */
+-	if (tty_start && up->port.type == PORT_16C950) {
++	if (up->port.type == PORT_16C950 && up->acr & UART_ACR_TXDIS) {
+ 		up->acr &= ~UART_ACR_TXDIS;
+ 		serial_icr_write(up, UART_ACR, up->acr);
+ 	}
+@@ -1057,14 +1063,18 @@ static _INLINE_ void transmit_chars(stru
+ 	struct circ_buf *xmit = &up->port.info->xmit;
+ 	int count;
+ 
+-  if (up->port.x_char) {
++	if (up->port.x_char) {
+ 		serial_outp(up, UART_TX, up->port.x_char);
+ 		up->port.icount.tx++;
+ 		up->port.x_char = 0;
+ 		return;
+ 	}
+-	if (uart_circ_empty(xmit) || uart_tx_stopped(&up->port)) {
+-		serial8250_stop_tx(&up->port, 0);
++	if (uart_tx_stopped(&up->port)) {
++		serial8250_stop_tx(&up->port);
++		return;
++	}
++	if (uart_circ_empty(xmit)) {
++		__stop_tx(up);
+ 		return;
+ 	}
+ 
+@@ -1083,7 +1093,7 @@ static _INLINE_ void transmit_chars(stru
+ 	DEBUG_INTR("THRE...");
+ 
+ 	if (uart_circ_empty(xmit))
+-		serial8250_stop_tx(&up->port, 0);
++		__stop_tx(up);
+ }
+ 
+ static _INLINE_ void check_modem_status(struct uart_8250_port *up)
+@@ -1196,7 +1206,7 @@ static irqreturn_t serial8250_interrupt(
+ }
+ 
+ #ifdef LUCENT_MODEM
+-static void agr_rs_interrupt (void)
++static void agr_rs_interrupt (unsigned long dummy)
+ {
+   serial8250_interrupt(lt_modem_res.Irq,NULL,NULL);
+  if(start_int)
+@@ -1658,8 +1668,8 @@ static unsigned int serial8250_get_divis
+ }
+ 
+ static void
+-serial8250_set_termios(struct uart_port *port, struct termios *termios,
+-		       struct termios *old)
++serial8250_set_termios(struct uart_port *port, struct ktermios *termios,
++		       struct ktermios *old)
+ {
+ 	struct uart_8250_port *up = (struct uart_8250_port *)port;
+ 	unsigned char cval, fcr = 0;

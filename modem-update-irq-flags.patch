@@ -1,0 +1,53 @@
+diff -p -up Modem/agrsoftmodem.c.orig Modem/agrsoftmodem.c
+--- Modem/agrsoftmodem.c.orig	2008-02-29 13:18:34.000000000 -0300
++++ Modem/agrsoftmodem.c	2008-02-29 13:20:47.000000000 -0300
+@@ -272,8 +272,8 @@ fnatr void x_release_region(unsigned lon
+ fnatr int x_request_irq(unsigned int irq, void (*handler), unsigned long irqflags, const char * devname, void *dev_id)
+ {
+ char devName[] ="LSI Mdm";
+-//bala Fix for PCI driver. For latest kernel (2.6.18 and above) always use Shared interrupt (SA_SHIRQ).
+-  return (request_irq(irq, wrap_LX_isr_handler, irqflags | SA_SHIRQ, devName, dev_id));
++//bala Fix for PCI driver. For latest kernel (2.6.18 and above) always use Shared interrupt (IRQF_SHARED).
++  return (request_irq(irq, wrap_LX_isr_handler, irqflags | IRQF_SHARED, devName, dev_id));
+ }
+ fnatr void x_free_irq(unsigned int irq, void *dev_id) { free_irq( irq, dev_id); }
+ 
+diff -p -up Modem/serial26.c.orig Modem/serial26.c
+--- Modem/serial26.c.orig	2008-02-29 13:20:12.000000000 -0300
++++ Modem/serial26.c	2008-02-29 13:21:52.000000000 -0300
+@@ -100,7 +100,7 @@ static char *serialif_name = "Agere Mode
+ #endif
+ /*
+  * Configuration:
+- *   share_irqs - whether we pass SA_SHIRQ to request_irq().  This option
++ *   share_irqs - whether we pass IRQF_SHARED to request_irq().  This option
+  *                is unsafe when used on edge-triggered interrupts.
+  */
+ unsigned int share_irqs = SERIAL8250_SHARE_IRQS;
+@@ -152,7 +152,7 @@ unsigned int share_irqs = SERIAL8250_SHA
+ 
+ #ifdef LUCENT_MODEM
+ #undef CONFIG_SERIAL_SHARE_IRQ
+-#define IRQ_T(state) ((state->flags & ASYNC_SHARE_IRQ) ? SA_SHIRQ : SA_INTERRUPT)
++#define IRQ_T(state) ((state->flags & ASYNC_SHARE_IRQ) ? IRQF_SHARED : IRQF_DISABLED)
+ int int_hooked = 0;
+ int (*GetAgrModemInterface)(void *mdmdata) = NULL;
+ int (*SetAgrModemInterface)(int state) = NULL;
+@@ -1251,7 +1251,7 @@ static int serial_link_irq_chain(struct 
+ 
+ 	    handler = VMODEM_Hw_Int_Proc;
+ 
+-	    ret = request_irq(up->port.irq, handler, SA_INTERRUPT | SA_SHIRQ,
++	    ret = request_irq(up->port.irq, handler, IRQF_DISABLED | IRQF_SHARED,
+ 				 uart_config[up->port.type].name, &lt_modem_res.BaseAddress);
+ 	    if (ret) {
+ 	      int_hooked--;
+@@ -1259,7 +1259,7 @@ static int serial_link_irq_chain(struct 
+ #endif
+ #else
+ 	struct irq_info *i = irq_lists + up->port.irq;
+-	int ret, irq_flags = up->port.flags & UPF_SHARE_IRQ ? SA_SHIRQ : 0;
++	int ret, irq_flags = up->port.flags & UPF_SHARE_IRQ ? IRQF_SHARED : 0;
+ 	void (*handler)(int, void *, struct pt_regs *);
+ 
+ 	spin_lock_irq(&i->lock);

@@ -1,0 +1,15 @@
+diff -p -up agrsm-2.1.80-ONE_A1XX-20080527/agr_softmodem.LSB agrsm-2.1.80-ONE_A1XX-20080527/agr_softmodem
+--- agrsm-2.1.80-ONE_A1XX-20080527/agr_softmodem.LSB	2008-06-06 16:24:04.000000000 +0200
++++ agrsm-2.1.80-ONE_A1XX-20080527/agr_softmodem	2008-06-06 16:28:35.000000000 +0200
+@@ -13,6 +13,11 @@
+ #   Soumyendu Sarkar       12/03/2002    Initial
+ #===========================================================================
+ #!/bin/sh
++### BEGIN INIT INFO
++# Provides: agrsm
++# Default-Start: 3 5
++# Description: Start Agere Systems Soft Modem
++### END INIT INFO
+ 
+ group="uucp"
+ mode="666"

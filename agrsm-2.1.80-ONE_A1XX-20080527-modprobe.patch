@@ -1,0 +1,14 @@
+diff -p -up agrsm-2.1.80-ONE_A1XX-20080527/agr_softmodem.modprobe agrsm-2.1.80-ONE_A1XX-20080527/agr_softmodem
+--- agrsm-2.1.80-ONE_A1XX-20080527/agr_softmodem.modprobe	2008-06-05 14:43:34.000000000 +0200
++++ agrsm-2.1.80-ONE_A1XX-20080527/agr_softmodem	2008-06-06 16:04:53.000000000 +0200
+@@ -24,8 +24,8 @@ case "$1" in
+   start)
+   echo "Starting Agere Soft Modem"
+   
+-  /sbin/insmod -f /lib/modules/`uname -r`/kernel/drivers/char/agrmodem.ko; \
+-  /sbin/insmod -f /lib/modules/`uname -r`/kernel/drivers/char/agrserial.ko; \
++  /sbin/modprobe agrmodem
++  /sbin/modprobe agrserial
+  /usr/lib/AgereSoftModem/AgereMdmDaemon
+  
+   if [ -e /dev/modem ]

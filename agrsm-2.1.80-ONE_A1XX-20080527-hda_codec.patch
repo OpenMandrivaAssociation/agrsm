@@ -1,0 +1,70 @@
+diff -p -up agrsm-2.1.80-ONE_A1XX-20080527/HDA.c.hda_codec agrsm-2.1.80-ONE_A1XX-20080527/HDA.c
+--- agrsm-2.1.80-ONE_A1XX-20080527/HDA.c.hda_codec	2008-06-06 16:23:23.000000000 +0200
++++ agrsm-2.1.80-ONE_A1XX-20080527/HDA.c	2008-06-06 16:14:53.000000000 +0200
+@@ -341,3 +341,66 @@ snd_printk(KERN_ERR"return %x\n", rvalue
+ #endif
+ return rvalue;
+ }
++
++void snd_hda_power_up(struct hda_codec *codec)
++{
++  return;
++}
++
++void snd_hda_power_down(struct hda_codec *codec)
++{
++  return;
++}
++
++/**
++ * snd_hda_codec_write - send a single command without waiting for response
++ * @codec: the HDA codec
++ * @nid: NID to send the command
++ * @direct: direct flag
++ * @verb: the verb to send
++ * @parm: the parameter for the verb
++ *
++ * Send a single command without waiting for response.
++ *
++ * Returns 0 if successful, or a negative error code.
++ */
++int snd_hda_codec_write(struct hda_codec *codec, hda_nid_t nid, int direct,
++			 unsigned int verb, unsigned int parm)
++{
++	int err;
++	snd_hda_power_up(codec);
++	mutex_lock(&codec->bus->cmd_mutex);
++	err = codec->bus->ops.command(codec, nid, direct, verb, parm);
++	mutex_unlock(&codec->bus->cmd_mutex);
++	snd_hda_power_down(codec);
++	return err;
++}
++
++/**
++ * snd_hda_codec_read - send a command and get the response
++ * @codec: the HDA codec
++ * @nid: NID to send the command
++ * @direct: direct flag
++ * @verb: the verb to send
++ * @parm: the parameter for the verb
++ *
++ * Send a single command and read the corresponding response.
++ *
++ * Returns the obtained response value, or -1 for an error.
++ */
++unsigned int snd_hda_codec_read(struct hda_codec *codec, hda_nid_t nid,
++				int direct,
++				unsigned int verb, unsigned int parm)
++{
++	unsigned int res;
++	snd_hda_power_up(codec);
++	mutex_lock(&codec->bus->cmd_mutex);
++	if (!codec->bus->ops.command(codec, nid, direct, verb, parm))
++		res = codec->bus->ops.get_response(codec);
++	else
++		res = (unsigned int)-1;
++	mutex_unlock(&codec->bus->cmd_mutex);
++	snd_hda_power_down(codec);
++	return res;
++}
++
