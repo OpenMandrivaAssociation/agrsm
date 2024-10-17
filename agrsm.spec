@@ -24,7 +24,7 @@ Patch7: agrsm-2.1.80-ONE_A1XX-20080527-hda_codec.patch
 Patch8: agrsm-2.1.80-ONE_A1XX-20080527-LSB.patch
 License: Commercial
 Group: System/Kernel and hardware
-URL: http://www.lsi.com/
+URL: https://www.lsi.com/
 BuildRoot: %{_tmppath}/%{name}-buildroot
 ExclusiveArch: %{ix86}
 
